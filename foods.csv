@@ -1,0 +1,12 @@
+food,carbs_per_100g,sugars_per_100g,glucose_pct_sugars,fructose_pct_sugars,notes
+Banana (ripe),22.8,10.0,49,49,Balanced; easily digested
+Dates (dried),75.0,64.0,50,50,"High-carb, gel-friendly"
+Raisins,79.0,59.0,52,48,"Portable, dense"
+Honey,82.4,80.0,47,53,Slightly fructose-heavy
+Maple syrup,67.0,60.0,56,44,Mild taste
+Apple (raw/purée),13.8,10.0,25,75,Fructose-heavy; slower emptying
+Orange juice,10.4,8.0,45,55,Balanced + hydrating
+Sweet potato (cooked),20.0,6.0,80,20,Mostly glucose/starch
+White rice (cooked),28.0,0.1,100,0,Essentially glucose (starch)
+Rice syrup / maltodextrin,100.0,100.0,100,0,Pure glucose polymer; ideal pairing
+Table sugar (sucrose),100.0,100.0,50,50,Standard 1:1 reference

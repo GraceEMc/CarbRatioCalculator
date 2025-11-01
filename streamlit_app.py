@@ -76,7 +76,7 @@ def compute_entry(row, grams: float):
 if add and grams > 0 and food_name:
     row = foods[foods["food"] == food_name].iloc[0]
     entry = compute_entry(row, grams)
-    st.session_state.items.append(entry)
+    st.session_state.food_items.append(entry)
 
 # --- Items list ---
 if len(st.session_state.food_items) == 0:

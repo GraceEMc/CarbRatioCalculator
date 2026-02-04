@@ -149,6 +149,8 @@ total_carbs = carbs_per_hour * duration_hours
 GLUCOSE_CAP = 65.0          # physiological cap (SGLT1)
 RATIO_LOW = 2.0              # 2:1 glucose:fructose at ~90 g/h
 RATIO_HIGH = 1/0.8           # 1:0.8 glucose:fructose at ~120 g/h
+RATIO_1_0_8 = (1,0.8)   # 1:0.8
+
 
 # ---------- Compute per-hour glucose & fructose ----------
 if carbs_per_hour <= GLUCOSE_CAP:
@@ -173,7 +175,7 @@ elif carbs_per_hour <= 120:
 
 else:
     # High intake: use RATIO_HIGH
-    ratio = RATIO_HIGH
+    ratio = f"{RATIO_1_0_8[0]}:{RATIO_1_0_8[1]}"
     glu_per_hr = carbs_per_hour * (ratio / (1 + ratio))
     fru_per_hr = carbs_per_hour - glu_per_hr
 

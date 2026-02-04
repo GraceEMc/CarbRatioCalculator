@@ -175,7 +175,7 @@ elif carbs_per_hour <= 120:
 
 else:
     # High intake: use RATIO_HIGH
-    ratio = f"{RATIO_1_0_8[0]}:{RATIO_1_0_8[1]}"
+    ratio = RATIO_HIGH
     glu_per_hr = carbs_per_hour * (ratio / (1 + ratio))
     fru_per_hr = carbs_per_hour - glu_per_hr
 

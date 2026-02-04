@@ -32,7 +32,7 @@ st.markdown(
 )
 
 st.markdown('<div class="title-big">Fuel Ratio Calculator</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Enter foods + grams to see total carbs and glucose:fructose balance. Perfect for gels and real-food fueling.</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Enter foods + grams to see total carbs and glucose:fructose balance. Perfect for DIY gels/sport drink and real-food fueling.</div>', unsafe_allow_html=True)
 
 # --- Session state ---
 if "food_items" not in st.session_state:
@@ -120,18 +120,25 @@ else:
 
     st.markdown("---")
     c1, c2, c3, c4 = st.columns([2,2,2,2])
-    c1.metric("Total carbs", f"{total_carbs:.1f} g")
-    c2.metric("Glucose (total)", f"{total_glu:.1f} g")
-    c3.metric("Fructose (total)", f"{total_fru:.1f} g")
-    c4.markdown(f"**G:F ratio** <span class='pill {pill_class}'>{ratio_text}</span>", unsafe_allow_html=True)
+    c2.metric("Total carbs", f"{total_carbs:.1f} g")
+    c3.metric("Glucose (total)", f"{total_glu:.1f} g")
+    c4.metric("Fructose (total)", f"{total_fru:.1f} g")
+    c1.markdown(f"**G:F ratio** <span class='pill {pill_class}'>{ratio_text}</span>", unsafe_allow_html=True)
 
 # Slider for carb intake
 carbs_per_hour = st.slider(
-    "Carbohydrate intake (g/hour)",
+    "Target Carbohydrate intake (g/hour)",
     min_value=0,
     max_value=200,
     value=90,
     step=5
+)
+
+duration_hours = st.number_input(
+    "Exercise duration (hours)",
+    min_value=0.0,
+    value=2.0,
+    step=0.25
 )
 
 # Define ratio logic
@@ -158,13 +165,56 @@ ratio_sum = glucose_ratio + fructose_ratio
 glucose_g = carbs_per_hour * (glucose_ratio / ratio_sum)
 fructose_g = carbs_per_hour * (fructose_ratio / ratio_sum)
 
-# Output
-st.subheader("Recommended Target Ratio")
-st.write(f"**Glucose : Fructose ≈ {glucose_ratio:.2f} : {fructose_ratio:.2f}**")
 
-st.subheader("Estimated Intake Breakdown")
-st.write(f"- **Glucose:** {glucose_g:.1f} g/h")
-st.write(f"- **Fructose:** {fructose_g:.1f} g/h")
+# --- Ratio text + pill style ---
+ratio_text = f"{glucose_ratio:.2f}:{fructose_ratio:.2f}"
+
+if carbs_per_hour <= 90:
+    pill_class = "pill-safe"
+elif carbs_per_hour <= 110:
+    pill_class = "pill-transition"
+else:
+    pill_class = "pill-high"
+
+# --- Styling ---
+st.markdown(
+    """
+    <style>
+    .pill {
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.85em;
+        font-weight: 600;
+    }
+    .pill-safe {
+        background-color: #e6f4ea;
+        color: #137333;
+    }
+    .pill-transition {
+        background-color: #fff4e5;
+        color: #b06000;
+    }
+    .pill-high {
+        background-color: #fdecea;
+        color: #b3261e;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# --- Results ---
+st.markdown("---")
+c1, c2, c3, c4 = st.columns([2, 2, 2, 2])
+
+c2.metric("Total carbs", f"{total_carbs:.1f} g")
+c3.metric("Glucose (total)", f"{total_glu:.1f} g")
+c4.metric("Fructose (total)", f"{total_fru:.1f} g")
+
+c1.markdown(
+    f"**G:F ratio** <span class='pill {pill_class}'>{ratio_text}</span>",
+    unsafe_allow_html=True
+)
 
 st.caption(
     "Ratios are based on evidence suggesting ~2:1 at ~90 g/h, "

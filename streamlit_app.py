@@ -185,9 +185,15 @@ total_fru = fru_per_hr * duration_hours
 if carbs_per_hour <= GLUCOSE_CAP:
     ratio_text = "Any"
 else:
+    if total_glu >= total_fru:
+        numerator = round(total_glu / total_fru, decimals)
+        denominator = 1
+    else:
+        numerator = 1
+        denominator = round(total_fru / total_glu, decimals)
     # Convert float ratio to X:Y
     # round to 1 decimal for readability
-    ratio_text = f"{round(glu_per_hr/fru_per_hr,1)}:{1}"
+    ratio_text = f"{numerator}:{denominator}"
 
 # ---------- Output ----------
 st.markdown("---")

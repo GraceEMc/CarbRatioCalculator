@@ -125,11 +125,52 @@ else:
     c3.metric("Fructose (total)", f"{total_fru:.1f} g")
     c4.markdown(f"**G:F ratio** <span class='pill {pill_class}'>{ratio_text}</span>", unsafe_allow_html=True)
 
-    st.markdown(
-        "<div class='muted'>Target zone for oxidation ~0.8–1.2 : 1. "
-        "Outside this range, pair fructose-heavy foods with glucose sources (e.g., rice syrup) or vice versa.</div>",
-        unsafe_allow_html=True
-    )
+# Slider for carb intake
+carbs_per_hour = st.slider(
+    "Carbohydrate intake (g/hour)",
+    min_value=0,
+    max_value=200,
+    value=90,
+    step=5
+)
+
+# Define ratio logic
+# Below 90 g/h -> ~2:1
+# Between 90–110 g/h -> transition toward 1:0.8
+# Above 110 g/h -> cap at ~1:0.8
+
+if carbs_per_hour <= 90:
+    glucose_ratio = 2.0
+    fructose_ratio = 1.0
+
+elif carbs_per_hour <= 110:
+    # Linear interpolation from 2:1 to 1:0.8
+    t = (carbs_per_hour - 90) / (110 - 90)
+    glucose_ratio = 2.0 + t * (1.0 - 2.0)
+    fructose_ratio = 1.0 + t * (0.8 - 1.0)
+
+else:
+    glucose_ratio = 1.0
+    fructose_ratio = 0.8
+
+# Normalize ratios to total intake
+ratio_sum = glucose_ratio + fructose_ratio
+glucose_g = carbs_per_hour * (glucose_ratio / ratio_sum)
+fructose_g = carbs_per_hour * (fructose_ratio / ratio_sum)
+
+# Output
+st.subheader("Recommended Target Ratio")
+st.write(f"**Glucose : Fructose ≈ {glucose_ratio:.2f} : {fructose_ratio:.2f}**")
+
+st.subheader("Estimated Intake Breakdown")
+st.write(f"- **Glucose:** {glucose_g:.1f} g/h")
+st.write(f"- **Fructose:** {fructose_g:.1f} g/h")
+
+st.caption(
+    "Ratios are based on evidence suggesting ~2:1 at ~90 g/h, "
+    "with higher intakes benefiting from increased fructose contribution "
+    "toward ~1:0.8 as tolerance allows."
+)
 
 st.markdown("---")
-st.caption("Gem Performance • Fuel smarter. Values per 100 g from standard nutrition references.")
+st.caption("GEM Performance • Fuel smarter. Values per 100 g from standard nutrition references.")

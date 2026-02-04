@@ -141,23 +141,45 @@ duration_hours = st.number_input(
     step=0.25
 )
 
-GLUCOSE_CAP = 65.0  # g/h
-
-# ---------- Transporter-based logic ----------
-glu_per_hr = min(carbs_per_hour, GLUCOSE_CAP)
-fru_per_hr = max(carbs_per_hour - glu_per_hr, 0.0)
 
 # ---------- Totals ----------
 total_carbs = carbs_per_hour * duration_hours
+
+# Parameters
+GLUCOSE_CAP = 65.0          # physiological cap (SGLT1)
+RATIO_LOW = 2.0              # 2:1 glucose:fructose at ~90 g/h
+RATIO_HIGH = 1/0.8           # 1:0.8 glucose:fructose at ~120 g/h
+
+# ---------- Compute per-hour glucose & fructose ----------
+if carbs_per_hour <= GLUCOSE_CAP:
+    # Physiology-limited region
+    glu_per_hr = carbs_per_hour
+    fru_per_hr = 0.0
+
+elif carbs_per_hour <= 90:
+    # Transition from capped glucose → 2:1 ratio at 90 g/h
+    t = (carbs_per_hour - GLUCOSE_CAP) / (90 - GLUCOSE_CAP)
+    ratio = 3.0 + t * (2.0 - 3.0)  # approximate 3:1 → 2:1
+    glu_per_hr = carbs_per_hour * (ratio / (1 + ratio))
+    fru_per_hr = carbs_per_hour - glu_per_hr
+
+elif carbs_per_hour <= 120:
+    # Transition 2:1 → 1:0.8
+    t = (carbs_per_hour - 90) / (120 - 90)
+    ratio = RATIO_LOW + t * (RATIO_HIGH - RATIO_LOW)
+    glu_per_hr = carbs_per_hour * (ratio / (1 + ratio))
+    fru_per_hr = carbs_per_hour - glu_per_hr
+
+else:
+    # High intake: use RATIO_HIGH
+    ratio = RATIO_HIGH
+    glu_per_hr = carbs_per_hour * (ratio / (1 + ratio))
+    fru_per_hr = carbs_per_hour - glu_per_hr
+
+# Totals
+total_carbs = carbs_per_hour * duration_hours
 total_glu = glu_per_hr * duration_hours
 total_fru = fru_per_hr * duration_hours
-
-# ---------- Ratio text ----------
-if fru_per_hr == 0:
-    ratio_text = "Glucose only"
-else:
-    ratio = glu_per_hr / fru_per_hr
-    ratio_text = f"{ratio:.2f}:1"
 
 # ---------- Output ----------
 st.markdown("---")

@@ -185,6 +185,7 @@ total_fru = fru_per_hr * duration_hours
 if carbs_per_hour <= GLUCOSE_CAP:
     ratio_text = "Any"
 else:
+    decimals=1
     if total_glu >= total_fru:
         numerator = round(total_glu / total_fru, decimals)
         denominator = 1

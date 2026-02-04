@@ -141,69 +141,25 @@ duration_hours = st.number_input(
     step=0.25
 )
 
-# Define ratio logic
-# Below 90 g/h -> ~2:1
-# Between 90–110 g/h -> transition toward 1:0.8
-# Above 110 g/h -> cap at ~1:0.8
+GLUCOSE_CAP = 65.0  # g/h
 
-if carbs_per_hour <= 90:
-    glucose_ratio = 2.0
-    fructose_ratio = 1.0
+# ---------- Transporter-based logic ----------
+glu_per_hr = min(carbs_per_hour, GLUCOSE_CAP)
+fru_per_hr = max(carbs_per_hour - glu_per_hr, 0.0)
 
-elif carbs_per_hour <= 110:
-    # Linear interpolation from 2:1 to 1:0.8
-    t = (carbs_per_hour - 90) / (110 - 90)
-    glucose_ratio = 2.0 + t * (1.0 - 2.0)
-    fructose_ratio = 1.0 + t * (0.8 - 1.0)
+# ---------- Totals ----------
+total_carbs = carbs_per_hour * duration_hours
+total_glu = glu_per_hr * duration_hours
+total_fru = fru_per_hr * duration_hours
 
+# ---------- Ratio text ----------
+if fru_per_hr == 0:
+    ratio_text = "Glucose only"
 else:
-    glucose_ratio = 1.0
-    fructose_ratio = 0.8
+    ratio = glu_per_hr / fru_per_hr
+    ratio_text = f"{ratio:.2f}:1"
 
-# Normalize ratios to total intake
-ratio_sum = glucose_ratio + fructose_ratio
-glucose_g = carbs_per_hour * (glucose_ratio / ratio_sum)
-fructose_g = carbs_per_hour * (fructose_ratio / ratio_sum)
-
-
-# --- Ratio text + pill style ---
-ratio_text = f"{glucose_ratio:.2f}:{fructose_ratio:.2f}"
-
-if carbs_per_hour <= 90:
-    pill_class = "pill-safe"
-elif carbs_per_hour <= 110:
-    pill_class = "pill-transition"
-else:
-    pill_class = "pill-high"
-
-# --- Styling ---
-st.markdown(
-    """
-    <style>
-    .pill {
-        padding: 4px 10px;
-        border-radius: 999px;
-        font-size: 0.85em;
-        font-weight: 600;
-    }
-    .pill-safe {
-        background-color: #e6f4ea;
-        color: #137333;
-    }
-    .pill-transition {
-        background-color: #fff4e5;
-        color: #b06000;
-    }
-    .pill-high {
-        background-color: #fdecea;
-        color: #b3261e;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-# --- Results ---
+# ---------- Output ----------
 st.markdown("---")
 c1, c2, c3, c4 = st.columns([2, 2, 2, 2])
 
@@ -211,10 +167,7 @@ c2.metric("Total carbs", f"{total_carbs:.1f} g")
 c3.metric("Glucose (total)", f"{total_glu:.1f} g")
 c4.metric("Fructose (total)", f"{total_fru:.1f} g")
 
-c1.markdown(
-    f"**G:F ratio** <span class='pill {pill_class}'>{ratio_text}</span>",
-    unsafe_allow_html=True
-)
+c1.markdown(f"**G:F ratio** <span class='pill {pill_class}'>{ratio_text}</span>", unsafe_allow_html=True)
 
 st.caption(
     "Ratios are based on evidence suggesting ~2:1 at ~90 g/h, "

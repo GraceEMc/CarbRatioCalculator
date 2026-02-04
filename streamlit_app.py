@@ -182,6 +182,13 @@ total_carbs = carbs_per_hour * duration_hours
 total_glu = glu_per_hr * duration_hours
 total_fru = fru_per_hr * duration_hours
 
+if carbs_per_hour <= GLUCOSE_CAP:
+    ratio_text = "Any"
+else:
+    # Convert float ratio to X:Y
+    # round to 1 decimal for readability
+    ratio_text = f"{round(glu_per_hr/fru_per_hr,1)}:{1}"
+
 # ---------- Output ----------
 st.markdown("---")
 c1, c2, c3, c4 = st.columns([2, 2, 2, 2])
@@ -190,7 +197,7 @@ c2.metric("Total carbs", f"{total_carbs:.1f} g")
 c3.metric("Glucose (total)", f"{total_glu:.1f} g")
 c4.metric("Fructose (total)", f"{total_fru:.1f} g")
 
-c1.markdown(f"**G:F ratio** <span class='pill {pill_class}'>{ratio}</span>", unsafe_allow_html=True)
+c1.markdown(f"**G:F ratio** <span class='pill {pill_class}'>{ratio_text}</span>", unsafe_allow_html=True)
 
 st.caption(
     "Ratios are based on evidence suggesting ~2:1 at ~90 g/h, "

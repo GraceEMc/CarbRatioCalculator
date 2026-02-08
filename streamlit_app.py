@@ -70,7 +70,6 @@ def compute_entry(row, grams: float):
         "sugars_g": round(sugars, 2),
         "glucose_g": round(glucose_total, 2),
         "fructose_g": round(fructose_total, 2),
-        "note": note
     }
 
 if add and grams > 0 and food_name:
@@ -84,12 +83,11 @@ if len(st.session_state.food_items) == 0:
 else:
     remove_idx = None
     for i, item in enumerate(st.session_state.food_items):
-        col1, col2, col3, col4, col5, col6 = st.columns([3, 2, 2, 2, 2, 1])
+        col1, col2, col3, col4,  col6 = st.columns([3, 2, 2, 2,  1])
         col1.markdown(f"**{item['food']}** — {int(item['grams'])} g")
         col2.markdown(f"Carbs: **{item['carbs_g']} g**")
         col3.markdown(f"Glucose: **{item['glucose_g']} g**")
         col4.markdown(f"Fructose: **{item['fructose_g']} g**")
-        col5.markdown(f"<span class='muted'>{item['note']}</span>", unsafe_allow_html=True)
         if col6.button("✖", key=f"rm_{i}"):
             remove_idx = i
     if remove_idx is not None:

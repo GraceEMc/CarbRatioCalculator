@@ -31,7 +31,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown('<div class="title-huge">Fuel Ratio Calculator</div>', unsafe_allow_html=True)
+st.markdown("##Fuel Ratio Calculator)
 st.markdown('<div class="subtitle">Enter foods + grams to see total carbs and glucose:fructose balance. Perfect for DIY gels/sport drink and real-food fueling.</div>', unsafe_allow_html=True)
 
 # --- Session state ---

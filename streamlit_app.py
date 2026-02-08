@@ -31,8 +31,8 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown("## Fuel Ratio Calculator")
-st.markdown('<div class="subtitle">Enter foods + grams to see total carbs and glucose:fructose balance. Perfect for DIY gels/sport drink and real-food fueling.</div>', unsafe_allow_html=True)
+st.markdown("# Fuel Ratio Calculator")
+st.caption("Enter foods + grams to see total carbs and glucose:fructose balance. Perfect for DIY gels/sport drink and real-food fueling")
 
 # --- Session state ---
 if "food_items" not in st.session_state:

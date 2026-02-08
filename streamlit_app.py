@@ -212,5 +212,12 @@ st.caption(
     "toward ~1:0.8 as tolerance allows."
 )
 
-st.markdown("---")
-st.caption("GEM Performance • Fuel smarter. Values per 100 g from standard nutrition references.")
+st.markdown("""
+<hr style='margin-top:2rem;'>
+<p style='text-align:center; color:#888; font-size:0.9rem;'>
+© 2026 <strong>G</strong><strong>E</strong><strong>M</strong> Performance.<br>
+<strong>G</strong>uiding <strong>E</strong>ndurance athletes to <strong>M</strong>astery. Find your optimum with GEM Performance.<br>
+Questions/issues? Email <a href="mailto:contactgemperformance@gmail.com">contactgemperformance@gmail.com</a>
+</p>
+""", unsafe_allow_html=True)
+

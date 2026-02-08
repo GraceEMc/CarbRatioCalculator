@@ -204,7 +204,7 @@ c2.metric("Total carbs", f"{total_carbs:.1f} g")
 c3.metric("Glucose (total)", f"{total_glu:.1f} g")
 c4.metric("Fructose (total)", f"{total_fru:.1f} g")
 
-c1.markdown(f"**G:F ratio** <span class='pill {"ok"}'>{ratio_text}</span>", unsafe_allow_html=True)
+c1.markdown(f"**G:F ratio** <span class='pill ok'>{ratio_text}</span>", unsafe_allow_html=True)
 
 st.caption(
     "Ratios are based on evidence suggesting ~2:1 at ~90 g/h, "
